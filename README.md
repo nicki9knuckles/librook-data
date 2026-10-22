@@ -1,0 +1,72 @@
+# librook-data
+
+Reference data files for librook, a language-learning reader. Each file lets
+the app look up a word offline: its base form (lemma), part of speech, short
+definitions in English and in the language itself, and which grammatical
+form a word is (for example "first-person imperfect indicative singular").
+
+The files are built from the English and Spanish Wiktionary via kaikki.org,
+and are licensed CC BY-SA 4.0. Details are below.
+
+The files are attached to this repo's
+[releases](https://github.com/nicki9knuckles/librook-data/releases), one
+release per language and data date. The app downloads them from there.
+
+## Files
+
+| Release | File | Size | Language | Source data date |
+|---|---|---|---|---|
+| `es-2026-10-21` | `reference-es.db` | 45.8 MB | Spanish | 2026-10-21 |
+
+Each file is a SQLite database with these tables:
+
+- `meta`: language, schema version, sources and licence
+- `entries`: one row per dictionary entry (lemma, part of speech, English
+  definitions, definitions in the language itself)
+- `forms`: every spelling that leads to an entry, with its grammatical tags
+- `tag_sets`: the distinct grammatical tag strings
+
+The schema version is recorded in `meta`. The app refuses a file whose
+schema version it doesn't recognise.
+
+## Sources and attribution
+
+The data comes from [Wiktionary](https://www.wiktionary.org/), written by
+Wiktionary contributors. It was extracted with
+[wiktextract](https://github.com/tatuylonen/wiktextract) and downloaded from
+[kaikki.org](https://kaikki.org/):
+
+- **English Wiktionary**: lemmas, parts of speech, English definitions,
+  inflected forms and grammatical tags.
+  [kaikki.org Spanish data](https://kaikki.org/dictionary/Spanish/index.html)
+- **Spanish Wiktionary**: Spanish-language definitions.
+  [kaikki.org raw data](https://kaikki.org/dictionary/rawdata.html)
+
+wiktextract is described in: Tatu Ylonen, "Wiktextract: Wiktionary as
+Machine-Readable Structured Data", *Proceedings of the 13th Conference on
+Language Resources and Evaluation (LREC)*, pp. 1317–1325, Marseille, 2022.
+
+## Changes made to the source data
+
+These files are adapted from the sources above, not copies of them. The
+build:
+
+- keeps only entries in the file's language whose word is made of letters
+  only, so multi-word expressions, and words containing hyphens or digits,
+  are left out;
+- keeps at most 3 definitions per entry from each Wiktionary edition;
+- drops inflection-table metadata, and any grammatical tag set that a more
+  specific tag set for the same form fully contains;
+- matches Spanish-edition entries to English-edition entries by word and
+  part of speech;
+- leaves out pronunciation, etymology, examples, translations and all other
+  fields.
+
+## Licence
+
+Wiktionary text is licensed under the
+[Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/)
+licence (CC BY-SA 4.0), and so are the files here, as adapted material. You
+may share and adapt them, including commercially, provided you give
+attribution and release any adapted material under the same licence. The
+full licence text is in [LICENSE](LICENSE).
