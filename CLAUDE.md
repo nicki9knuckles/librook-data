@@ -53,14 +53,37 @@ The build code lives in the **librook** repo (private), not here:
 5. **Check the size.** The target is under about 50 MB per language (the
    devices are e-ink readers with limited storage). If it's over, discuss
    trimming with the user before changing the build. Spanish is 45.8 MB,
-   and pronoun-combined verb forms make up about half its forms.
+   and pronoun-combined verb forms (*háblame*) make up about half its forms.
+   Portuguese is 19.9 MB: it writes those forms with a hyphen (*fala-me*),
+   and the build drops every spelling with a hyphen, since the app's Reader
+   splits words at hyphens and could never look one up.
 
 6. **Sanity-check the output** with `sqlite3`. Look up a few common
    inflected words, an ambiguous word, and a base form, and check that the
    lemma, part of speech, tags and both sets of definitions look right.
    Also check how many entries have native definitions
    (`SELECT COUNT(*) FROM entries WHERE native_glosses <> '[]'`). For
-   Spanish it's 47%.
+   Spanish it's 47%, for Portuguese 50%.
+
+   Then **measure coverage** against a real book in the language, from the
+   librook repo (for an EPUB, extract its text first; the script's header
+   says how):
+   ```
+   npm run measure:reference -- --pack reference-<code>.db --text book.txt \
+     --words <a few common words to inspect>
+   ```
+   It prints the share of the book's different words found, the share of
+   those with native definitions, how hyphenated words fare, and the
+   readings of each listed word. Spanish finds 93.0% of the running text of
+   a modern novel, and Portuguese 93.3% of an 1899 one. Most misses should
+   be names or old spellings. If common words are missing, look at how the
+   source marks them before publishing; Portuguese contractions (*do*,
+   *na*) were dropped until the build learned to keep them.
+
+   Also check whether the language needs a rule in `referencePack.ts`.
+   `SHORTENED_INFINITIVES` lists, per language, how an infinitive is spelled
+   before an attached pronoun written after a hyphen (Portuguese *fazê-lo*),
+   since the Reader looks up *fazê* on its own.
 
 7. **Publish.** Commit any README change first, because a release needs a
    commit to tag. Then:
@@ -80,8 +103,8 @@ The build code lives in the **librook** repo (private), not here:
 
 9. **Update the app** (in librook): add the language to the list of
    available reference data, with the download URL, the exact size in
-   bytes, and the source text. That list is planned as `REFERENCE_PACKS` in
-   `src/features/reference/referencePacks.ts`, as part of feature 010.
+   bytes, and the source text. That list is `REFERENCE_PACKS` in
+   `src/features/reference/referencePacks.ts`.
 
 ## Rules
 

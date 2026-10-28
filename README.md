@@ -5,8 +5,8 @@ the app look up a word offline: its base form (lemma), part of speech, short
 definitions in English and in the language itself, and which grammatical
 form a word is (for example "first-person imperfect indicative singular").
 
-The files are built from the English and Spanish Wiktionary via kaikki.org,
-and are licensed CC BY-SA 4.0. Details are below.
+The files are built from the English Wiktionary and each language's own
+Wiktionary via kaikki.org, and are licensed CC BY-SA 4.0. Details are below.
 
 The files are attached to this repo's
 [releases](https://github.com/nicki9knuckles/librook-data/releases), one
@@ -17,6 +17,7 @@ release per language and data date. The app downloads them from there.
 | Release | File | Size | Language | Source data date |
 |---|---|---|---|---|
 | `es-2026-10-21` | `reference-es.db` | 45.8 MB | Spanish | 2026-10-21 |
+| `pt-2026-10-25` | `reference-pt.db` | 19.9 MB | Portuguese | 2026-10-25 |
 
 Each file is a SQLite database with these tables:
 
@@ -38,8 +39,11 @@ Wiktionary contributors. It was extracted with
 
 - **English Wiktionary**: lemmas, parts of speech, English definitions,
   inflected forms and grammatical tags.
-  [kaikki.org Spanish data](https://kaikki.org/dictionary/Spanish/index.html)
+  [kaikki.org Spanish data](https://kaikki.org/dictionary/Spanish/index.html),
+  [kaikki.org Portuguese data](https://kaikki.org/dictionary/Portuguese/index.html)
 - **Spanish Wiktionary**: Spanish-language definitions.
+  [kaikki.org raw data](https://kaikki.org/dictionary/rawdata.html)
+- **Portuguese Wiktionary**: Portuguese-language definitions.
   [kaikki.org raw data](https://kaikki.org/dictionary/rawdata.html)
 
 wiktextract is described in: Tatu Ylonen, "Wiktextract: Wiktionary as
@@ -57,8 +61,15 @@ build:
 - keeps at most 3 definitions per entry from each Wiktionary edition;
 - drops inflection-table metadata, and any grammatical tag set that a more
   specific tag set for the same form fully contains;
-- matches Spanish-edition entries to English-edition entries by word and
-  part of speech;
+- matches the language's own edition's entries to English-edition entries by
+  word and part of speech;
+- keeps contractions (such as Portuguese *do*, "contraction of de + o") as
+  entries with their own definitions, rather than as pointers to another word
+  (Portuguese file onwards);
+- puts "(Brazil)" or "(Portugal)" in front of a definition the source marks
+  as used in that region (Portuguese file onwards);
+- adds, for Portuguese verbs, the infinitive spelling used before an attached
+  pronoun (*fazê* in *fazê-lo*, *amá* in *amá-la*), tagged as the infinitive;
 - leaves out pronunciation, etymology, examples, translations and all other
   fields.
 
