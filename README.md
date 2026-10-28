@@ -18,6 +18,7 @@ release per language and data date. The app downloads them from there.
 |---|---|---|---|---|
 | `es-2026-10-21` | `reference-es.db` | 45.8 MB | Spanish | 2026-10-21 |
 | `pt-2026-10-25` | `reference-pt.db` | 19.9 MB | Portuguese | 2026-10-25 |
+| `fr-2026-10-25` | `reference-fr.db` | 24.4 MB | French | 2026-10-25 |
 
 Each file is a SQLite database with these tables:
 
@@ -40,10 +41,13 @@ Wiktionary contributors. It was extracted with
 - **English Wiktionary**: lemmas, parts of speech, English definitions,
   inflected forms and grammatical tags.
   [kaikki.org Spanish data](https://kaikki.org/dictionary/Spanish/index.html),
-  [kaikki.org Portuguese data](https://kaikki.org/dictionary/Portuguese/index.html)
+  [kaikki.org Portuguese data](https://kaikki.org/dictionary/Portuguese/index.html),
+  [kaikki.org French data](https://kaikki.org/dictionary/French/index.html)
 - **Spanish Wiktionary**: Spanish-language definitions.
   [kaikki.org raw data](https://kaikki.org/dictionary/rawdata.html)
 - **Portuguese Wiktionary**: Portuguese-language definitions.
+  [kaikki.org raw data](https://kaikki.org/dictionary/rawdata.html)
+- **French Wiktionary**: French-language definitions.
   [kaikki.org raw data](https://kaikki.org/dictionary/rawdata.html)
 
 wiktextract is described in: Tatu Ylonen, "Wiktextract: Wiktionary as
@@ -57,7 +61,12 @@ build:
 
 - keeps only entries in the file's language whose word is made of letters
   only, so multi-word expressions, and words containing hyphens or digits,
-  are left out;
+  are left out. Words with an apostrophe are kept (French file onwards):
+  an elided word (*l'*, *jusqu'*) is looked up without its apostrophe, and
+  leads to the word it stands for; each piece of a word joined by an
+  apostrophe (*aujourd'hui*) leads to the whole word, unless the first
+  piece is itself an elided word (*c'est*). Curly apostrophes are
+  straightened;
 - keeps at most 3 definitions per entry from each Wiktionary edition;
 - drops inflection-table metadata, and any grammatical tag set that a more
   specific tag set for the same form fully contains;
@@ -68,6 +77,13 @@ build:
   (Portuguese file onwards);
 - puts "(Brazil)" or "(Portugal)" in front of a definition the source marks
   as used in that region (Portuguese file onwards);
+- links a form whose page points at another form's page (French
+  *arrivés*, "masculine plural of *arrivé*", itself "past participle of
+  *arriver*") to the lemma, with both pages' grammatical tags (French file
+  onwards);
+- puts "(Quebec)", "(Canada)", "(Louisiana)", "(France)", "(Belgium)" or
+  "(Switzerland)" in front of a French definition the source marks as used
+  there (French file onwards);
 - adds, for Portuguese verbs, the infinitive spelling used before an attached
   pronoun (*fazê* in *fazê-lo*, *amá* in *amá-la*), tagged as the infinitive;
 - leaves out pronunciation, etymology, examples, translations and all other

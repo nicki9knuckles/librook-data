@@ -57,15 +57,22 @@ needed a decision before:
    - *Do contractions and elisions survive?* Look at a few common ones:
      `jq -c 'select(.word=="do") | {pos, senses: [.senses[] | {glosses, tags, form_of, alt_of}]}' $EN`.
      A word whose senses are all `form_of`/`alt_of` becomes a pointer, not
-     an entry, unless its part of speech is `contraction`. Spellings with an
-     apostrophe or hyphen (`l'`, `qu'`, `aujourd'hui`) are dropped entirely,
-     because the Reader can never tap them whole.
+     an entry, unless its part of speech is `contraction`. Spellings with a
+     hyphen are dropped entirely, because the Reader can never tap them
+     whole. Spellings with an apostrophe are kept (010m): *l'* is looked up
+     as *l*, and *aujourd'hui* by its pieces. Check the native edition's
+     apostrophes too: French writes them curly (*aujourd’hui*).
+   - *Do form-of pages point at other form-of pages?* French *arrivés* is
+     "plural of *arrivé*", itself "participle of *arriver*". The build
+     follows one such step.
    - *Do inflection tables list joined forms?* Look at a common verb's
      `forms` for hyphens or apostrophes. If the table doesn't list the
      shortened stem the Reader will look up (*fazê*), a rule is needed.
    - *Which region tags do senses use, in both editions?*
      `jq -r '.senses[]?.tags[]?' $EN | grep '^[A-Z]' | sort | uniq -c | sort -rn | head`.
-     The editions spell them differently (*Brazil* and *Brazilian*).
+     The editions spell them differently (*Brazil* and *Brazilian*), and
+     may put them in `raw_tags` instead (French: *Québec*, *Suisse*):
+     check `.senses[]?.raw_tags[]?` as well.
 
 4. **Add any per-language rules** to `LANGUAGE_RULES` in
    `scripts/referencePack.ts`. It is the only place the build treats
@@ -96,7 +103,8 @@ needed a decision before:
    - **Size:** under about 50 MB (the devices are e-ink readers with limited
      storage). Spanish is 45.8 MB, half of it pronoun-combined verb forms
      (*háblame*). Portuguese is 19.9 MB, because it writes those forms with
-     a hyphen and the build drops hyphenated spellings. Over 50 MB: discuss
+     a hyphen and the build drops hyphenated spellings. French is 24.4 MB.
+     Over 50 MB: discuss
      trimming with the user before changing the build.
    - **Coverage**, against a real book in the language (ideally one the
      user means to read, in modern spelling):
@@ -113,6 +121,7 @@ needed a decision before:
      |---|---|---|---|
      | Spanish, *Éramos unos niños* (modern) | 94.5% | 89.9% | 95.6% of found |
      | Portuguese, *Dom Casmurro* (1899 spelling) | 93.7% | 80.8% | 95.0% of found |
+     | French, *Maria Chapdelaine* (1913, Quebec) | 98.8% | 97.7% | 99.3% of found |
 
      A new language should land near these figures. **Read the most frequent
      misses**: names and old spellings are expected, but a whole class of
