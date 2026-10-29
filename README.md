@@ -16,6 +16,9 @@ release per language and data date. The app downloads them from there.
 
 | Release | File | Size | Language | Source data date |
 |---|---|---|---|---|
+| `es-2026-10-29` | `reference-es.db` | 47.8 MB | Spanish | 2026-10-25 (English), 2026-10-28 (Spanish) |
+| `pt-2026-10-29` | `reference-pt.db` | 21.4 MB | Portuguese | 2026-10-25 (English), 2026-10-28 (Portuguese) |
+| `fr-2026-10-29` | `reference-fr.db` | 25.2 MB | French | 2026-10-25 (English), 2026-10-27 (French) |
 | `es-2026-10-28` | `reference-es.db` | 46.8 MB | Spanish | 2026-10-25 (English), 2026-10-28 (Spanish) |
 | `pt-2026-10-28` | `reference-pt.db` | 20.6 MB | Portuguese | 2026-10-25 (English), 2026-10-28 (Portuguese) |
 | `fr-2026-10-27` | `reference-fr.db` | 24.4 MB | French | 2026-10-25 (English), 2026-10-27 (French) |
@@ -30,9 +33,13 @@ Each file is a SQLite database with these tables:
   definitions, definitions in the language itself)
 - `forms`: every spelling that leads to an entry, with its grammatical tags
 - `tag_sets`: the distinct grammatical tag strings
+- `spelling_glosses`: the language's own definition of a spelling that is
+  otherwise only a pointer to another word (*mi*, "apocopic form of *mío*"),
+  per spelling and entry (schema version 2 onwards)
 
 The schema version is recorded in `meta`. The app refuses a file whose
-schema version it doesn't recognise.
+schema version it doesn't recognise. Releases from 2026-10-29 are version 2;
+earlier ones are version 1.
 
 ## Sources and attribution
 
@@ -75,11 +82,25 @@ build:
   specific tag set for the same form fully contains;
 - drops tags that describe the Wiktionary page rather than the word
   (`form-of`, `alt-of`), and `abbreviation` next to a more specific kind of
-  shortening such as `apocopic` (releases from 2026-10-27 onwards);
+  shortening such as `apocopic` (releases from 2026-10-27 onwards), and
+  wiktextract's `error-` parser tags (releases from 2026-10-29 onwards);
 - matches the language's own edition's entries to English-edition entries by
   word and part of speech. When the two editions have different numbers of
   entries for a word, an entry only gets definitions from entries of the
-  same gender, or of no stated gender (releases from 2026-10-27 onwards);
+  same gender, or of no stated gender (releases from 2026-10-27 onwards).
+  When the language's own edition has no entry under the same part of
+  speech, a related one is used: determiner, then pronoun, then adjective;
+  name and noun; number and adjective or noun (releases from 2026-10-29
+  onwards);
+- keeps, for a spelling that the English edition only lists as a form of
+  another word, the language's own definition of that spelling, unless the
+  definition only names the word it is a form of (releases from 2026-10-29
+  onwards);
+- keeps Wiktionary's short labels on English definitions ("(informal)",
+  "(music)"), leaving out regions, labels the definition already states,
+  labels shared by every definition of the entry, and labels over three
+  words; and keeps "form of" definitions on entries that also have
+  meanings of their own (releases from 2026-10-29 onwards);
 - keeps contractions (such as Portuguese *do*, "contraction of de + o") as
   entries with their own definitions, rather than as pointers to another word
   (Portuguese file onwards);
