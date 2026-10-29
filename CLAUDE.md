@@ -101,8 +101,8 @@ needed a decision before:
 
 6. **Measure, and stop at a gate.**
    - **Size:** under about 50 MB (the devices are e-ink readers with limited
-     storage). Spanish is 45.8 MB, half of it pronoun-combined verb forms
-     (*háblame*). Portuguese is 19.9 MB, because it writes those forms with
+     storage). Spanish is 46.8 MB, half of it pronoun-combined verb forms
+     (*háblame*). Portuguese is 20.6 MB, because it writes those forms with
      a hyphen and the build drops hyphenated spellings. French is 24.4 MB.
      Over 50 MB: discuss
      trimming with the user before changing the build.
@@ -119,8 +119,8 @@ needed a decision before:
 
      | Baseline | Running text found | Different words found | Native definitions |
      |---|---|---|---|
-     | Spanish, *Éramos unos niños* (modern) | 94.5% | 89.9% | 95.6% of found |
-     | Portuguese, *Dom Casmurro* (1899 spelling) | 93.7% | 80.8% | 95.0% of found |
+     | Spanish, *Éramos unos niños* (modern) | 94.6% | 90.2% | 95.6% of found |
+     | Portuguese, *Dom Casmurro* (1899 spelling) | 94.2% | 81.3% | 95.0% of found |
      | French, *Maria Chapdelaine* (1913, Quebec) | 98.8% | 97.7% | 99.3% of found |
 
      A new language should land near these figures. **Read the most frequent

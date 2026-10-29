@@ -16,6 +16,9 @@ release per language and data date. The app downloads them from there.
 
 | Release | File | Size | Language | Source data date |
 |---|---|---|---|---|
+| `es-2026-10-28` | `reference-es.db` | 46.8 MB | Spanish | 2026-10-25 (English), 2026-10-28 (Spanish) |
+| `pt-2026-10-28` | `reference-pt.db` | 20.6 MB | Portuguese | 2026-10-25 (English), 2026-10-28 (Portuguese) |
+| `fr-2026-10-27` | `reference-fr.db` | 24.4 MB | French | 2026-10-25 (English), 2026-10-27 (French) |
 | `es-2026-10-21` | `reference-es.db` | 45.8 MB | Spanish | 2026-10-21 |
 | `pt-2026-10-25` | `reference-pt.db` | 19.9 MB | Portuguese | 2026-10-25 |
 | `fr-2026-10-25` | `reference-fr.db` | 24.4 MB | French | 2026-10-25 |
@@ -70,8 +73,13 @@ build:
 - keeps at most 3 definitions per entry from each Wiktionary edition;
 - drops inflection-table metadata, and any grammatical tag set that a more
   specific tag set for the same form fully contains;
+- drops tags that describe the Wiktionary page rather than the word
+  (`form-of`, `alt-of`), and `abbreviation` next to a more specific kind of
+  shortening such as `apocopic` (releases from 2026-10-27 onwards);
 - matches the language's own edition's entries to English-edition entries by
-  word and part of speech;
+  word and part of speech. When the two editions have different numbers of
+  entries for a word, an entry only gets definitions from entries of the
+  same gender, or of no stated gender (releases from 2026-10-27 onwards);
 - keeps contractions (such as Portuguese *do*, "contraction of de + o") as
   entries with their own definitions, rather than as pointers to another word
   (Portuguese file onwards);
